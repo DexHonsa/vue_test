@@ -11,19 +11,19 @@
         <div class="login-btn">Learn More</div>
       </div>
       <div class="login-box-title">Login to DataCloud</div>
-      <form v-on:submit="onSubmitForm">
+      <form @submit.prevent="onSubmitForm">
         <input type="hidden" value="something" />
         <div class="login-box-input-item">
           <div class="login-box-input-icon"><i class="fa fa-user" /></div>
           <div class="form-group">
-            <input type="text" placeholder="Username" class="css-login-input-input" />
+            <input @input="onInput" type="text" name="username" placeholder="Username" class="css-login-input-input" />
           </div>
         </div>
         <div class="login-box-input-item">
           <div class="login-box-input-icon"><i class="fa fa-lock" /></div>
 
           <div class="form-group">
-            <input placeholder="Password" type="text" class="css-login-input-input" />
+            <input @input="onInput" name="password" placeholder="Password" type="text" class="css-login-input-input" />
           </div>
         </div>
         <button type="submit" class="login-btn">Login</button>
@@ -42,22 +42,32 @@
 </template>
 
 <script type="text/javascript">
+import axios from "axios";
+
 export default {
-  name: 'login',
-  data:function() {
+  name: "login",
+  data: function() {
     return {
-      username: '',
-      password: ''
-    }
+      username: "",
+      password: ""
+    };
   },
   methods: {
-    onSubmitForm: function(e){
-      this.$router.push('/dashboard')
+    onInput: function(e) {
+      this[e.target.name] = e.target.value;
+    },
+    onSubmitForm: function(e) {
+      var data = {
+        username: this.username,
+        password: this.password
+      };
+      axios.post("http://40.65.104.52:8080/v1/auth", data).then(res => {
+        window.localStorage.setItem("auth", res.data.token);
+        console.log("jahaha");
+        this.$router.push("/dashboard");
+      });
     }
   },
-  created: function() {
-
-  }
-
-}
+  created: function() {}
+};
 </script>

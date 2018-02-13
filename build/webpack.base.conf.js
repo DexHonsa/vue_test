@@ -1,8 +1,11 @@
 'use strict'
+const autoprefixer = require('autoprefixer');
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const vtkRules = require('vtk.js/Utilities/config/dependency.js').webpack.v2.rules;
+
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -60,7 +63,7 @@ module.exports = {
         }
       },
       {
-        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac|csv)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
@@ -74,8 +77,9 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
-    ]
+      },
+      
+    ].concat(vtkRules)
   },
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
